@@ -59,13 +59,19 @@ namespace Mjolnir.ConsoleCommandLine
 
             foreach (var assembly in allAssemblies)
             {
-                var types = FindAllDerivedTypes<ConsoleCommandBase>(assembly)
-                    .Where(w => w.GetCustomAttribute<ConsoleCommandAttribute>() != null);
-
-                foreach (var type in types)
+                try
                 {
-                    var attributeValue = type.GetCustomAttribute<ConsoleCommandAttribute>();
-                    Commands.Add(new Tuple<string, ConsoleCommandAttribute, Type>(attributeValue.Command, attributeValue, type));
+                    var types = FindAllDerivedTypes<ConsoleCommandBase>(assembly)
+                                        .Where(w => w.GetCustomAttribute<ConsoleCommandAttribute>() != null);
+
+                    foreach (var type in types)
+                    {
+                        var attributeValue = type.GetCustomAttribute<ConsoleCommandAttribute>();
+                        Commands.Add(new Tuple<string, ConsoleCommandAttribute, Type>(attributeValue.Command, attributeValue, type));
+                    }
+                }
+                catch (Exception ex)
+                {
                 }
             }
 

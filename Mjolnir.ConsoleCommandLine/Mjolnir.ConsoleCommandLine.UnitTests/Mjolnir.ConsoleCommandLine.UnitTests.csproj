@@ -50,8 +50,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="ConsoleCommandLineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.csproj">
+      <Project>{1ffde233-856f-486f-b219-f58bab6110ff}</Project>
+      <Name>Mjolnir.ConsoleCommandLine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

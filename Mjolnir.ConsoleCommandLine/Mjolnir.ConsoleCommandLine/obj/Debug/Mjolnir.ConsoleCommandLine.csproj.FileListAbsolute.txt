@@ -1,9 +1,9 @@
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Mjolnir.ConsoleCommandLine.dll
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Mjolnir.ConsoleCommandLine.pdb
 C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Microsoft.Crm.Sdk.Proxy.dll
 C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Microsoft.IdentityModel.dll
 C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Microsoft.Xrm.Sdk.dll
 C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Microsoft.Crm.Sdk.Proxy.xml
 C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Microsoft.Xrm.Sdk.xml
-C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Mjolnir.ConsoleCommandLine.dll
-C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\bin\Debug\Mjolnir.ConsoleCommandLine.pdb
 C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\obj\Debug\Mjolnir.ConsoleCommandLine.dll
 C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\obj\Debug\Mjolnir.ConsoleCommandLine.pdb

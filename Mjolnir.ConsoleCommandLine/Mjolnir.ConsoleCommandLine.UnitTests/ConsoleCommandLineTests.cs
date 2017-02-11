@@ -4,11 +4,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Mjolnir.ConsoleCommandLine.UnitTests
 {
     [TestClass]
-    public class UnitTest1
+    public class ConsoleCommandLineTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void InitalizeCMD()
         {
+            var cmd = ConsoleCommandLine.Instance;
+
+            cmd.Initialize();
+
+            cmd.Run(null);
         }
     }
 }
