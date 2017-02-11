@@ -1,0 +1,10 @@
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\bin\Debug\ConsoleCommandLine.dll
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\bin\Debug\ConsoleCommandLine.pdb
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\obj\Debug\ConsoleCommandLine.dll
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\obj\Debug\ConsoleCommandLine.pdb
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\bin\Debug\Microsoft.Crm.Sdk.Proxy.dll
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\bin\Debug\Microsoft.IdentityModel.dll
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\bin\Debug\Microsoft.Xrm.Sdk.dll
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\bin\Debug\Microsoft.Crm.Sdk.Proxy.xml
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\bin\Debug\Microsoft.Xrm.Sdk.xml
+C:\Prj\GitHub\CRMSolutionManager\CRMSolutionManager\ConsoleCommand\obj\Debug\ConsoleCommandLine.csprojResolveAssemblyReference.cache

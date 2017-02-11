@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Mjolnir.CRM.ConsoleCommandLine</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Osman GUMUS</authors>
+    <owners>Osman GUMUS</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Helper tool for building quick console applications.</description>
+    <releaseNotes>First release.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Commandline CMD</tags>
+  </metadata>
+</package>

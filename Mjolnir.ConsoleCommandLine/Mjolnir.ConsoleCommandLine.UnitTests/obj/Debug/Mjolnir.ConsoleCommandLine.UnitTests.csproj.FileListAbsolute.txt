@@ -1,0 +1,6 @@
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.UnitTests\bin\Debug\Mjolnir.CRM.ConsoleCommandLine.UnitTests.dll
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.UnitTests\bin\Debug\Mjolnir.CRM.ConsoleCommandLine.UnitTests.pdb
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.UnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.UnitTests\obj\Debug\Mjolnir.ConsoleCommandLine.UnitTests.csprojResolveAssemblyReference.cache
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.UnitTests\obj\Debug\Mjolnir.CRM.ConsoleCommandLine.UnitTests.dll
+C:\Prj\GitHub\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.UnitTests\obj\Debug\Mjolnir.CRM.ConsoleCommandLine.UnitTests.pdb
