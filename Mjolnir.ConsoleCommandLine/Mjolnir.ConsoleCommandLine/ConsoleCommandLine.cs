@@ -30,23 +30,33 @@ namespace Mjolnir.ConsoleCommandLine
         private Dictionary<string, string> Parameters = null;
 
 
+        public Action HeaderAction { get; set; }
 
         private ConsoleCommandLine()
         {
             Commands = new List<Tuple<string, ConsoleCommandAttribute, Type>>();
         }
 
-        public virtual void ShowHeader()
+        public void ShowHeader()
         {
             Console.Clear();
+
+            if (HeaderAction != null)
+            {
+                try
+                {
+                    HeaderAction.Invoke();
+                }
+                catch (Exception) { /*Surpress exception*/}
+            }
         }
 
         public void Initialize()
         {
-            ShowHeader();
-
             //Iterate commands in current folder, in different assemblies
             RegisterCommands();
+
+            ShowHeader();
         }
 
         private void RegisterCommands()
@@ -54,8 +64,6 @@ namespace Mjolnir.ConsoleCommandLine
             List<Assembly> allAssemblies = new List<Assembly>();
 
             LoadAssemblies(allAssemblies);
-
-
 
             foreach (var assembly in allAssemblies)
             {
@@ -70,9 +78,7 @@ namespace Mjolnir.ConsoleCommandLine
                         Commands.Add(new Tuple<string, ConsoleCommandAttribute, Type>(attributeValue.Command, attributeValue, type));
                     }
                 }
-                catch (Exception ex)
-                {
-                }
+                catch (Exception) {/*Surpress exception*/}
             }
 
         }
