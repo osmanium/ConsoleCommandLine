@@ -1,22 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1FFDE233-856F-486F-B219-F58BAB6110FF}</ProjectGuid>
+    <ProjectGuid>{62A48489-CC68-431D-8515-3FBB750BA44C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mjolnir.ConsoleCommandLine</RootNamespace>
-    <AssemblyName>Mjolnir.ConsoleCommandLine</AssemblyName>
+    <RootNamespace>Mjolnir.ConsoleCommandLine.TestLibrary</RootNamespace>
+    <AssemblyName>Mjolnir.ConsoleCommandLine.TestLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Mjolnir.ConsoleCommandLine.TestConsole\bin\Debug\Commands\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,12 +34,11 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Mjolnir.ConsoleCommandLine.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>TestLibrary.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.8.2.0.2\lib\net452\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.6.1.7600.16394\lib\net35\Microsoft.IdentityModel.dll</HintPath>
@@ -49,14 +49,12 @@
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.8.2.0.2\lib\net452\Microsoft.Xrm.Sdk.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
     </Reference>
@@ -110,7 +108,6 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Workflow.Runtime" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -121,32 +118,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CmdLine.cs" />
-    <Compile Include="CommandLineAttributeBase.cs" />
-    <Compile Include="Commands\ClearCommand.cs" />
-    <Compile Include="Commands\ListCommandsCommand.cs" />
-    <Compile Include="ConsoleCommandBase.cs" />
-    <Compile Include="ConsoleCommandAttribute.cs" />
-    <Compile Include="ConsoleCommandLine.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Nothing.cs" />
+    <Compile Include="TestCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="InputAttributes\StringInput.cs" />
-    <Compile Include="Tracer\ConsoleTracer.cs" />
-    <Compile Include="Tracer\FileTracer.cs" />
-    <Compile Include="Utils\TableToConsole.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Mjolnir.ConsoleCommandLine.snk" />
     <None Include="packages.config" />
+    <None Include="TestLibrary.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mjolnir.ConsoleCommandLine\Mjolnir.ConsoleCommandLine.csproj">
+      <Project>{1ffde233-856f-486f-b219-f58bab6110ff}</Project>
+      <Name>Mjolnir.ConsoleCommandLine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -24,7 +24,9 @@ namespace Mjolnir.ConsoleCommandLine.TestConsole
 
             commandLine.Initialize();
 
-            commandLine.Run(args);
+            if (!commandLine.IsTypeLoadError)
+                commandLine.Run(args);
+            else Console.ReadKey();
         }
     }
 }

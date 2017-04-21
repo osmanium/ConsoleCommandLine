@@ -2,6 +2,7 @@
 using Mjolnir.ConsoleCommandLine.Tracer;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,10 +14,12 @@ namespace Mjolnir.ConsoleCommandLine
     public class ConsoleCommandLine
     {
         private Dictionary<string, string> Parameters = null;
-        
+
+
+        public bool IsTypeLoadError { get; private set; } = false;
 
         public List<Tuple<string, ConsoleCommandAttribute, Type>> Commands { get; private set; }
-        
+
         private static ConsoleCommandLine instance;
         public static ConsoleCommandLine Instance
         {
@@ -29,7 +32,7 @@ namespace Mjolnir.ConsoleCommandLine
                 return instance;
             }
         }
-        
+
         public Action HeaderAction { get; set; }
 
 
@@ -39,14 +42,15 @@ namespace Mjolnir.ConsoleCommandLine
             Commands = new List<Tuple<string, ConsoleCommandAttribute, Type>>();
         }
         #endregion
-        
+
         #region Publis Methods
         public void Initialize()
         {
             //Iterate commands in current folder, in different assemblies
-            RegisterCommands();
+            IsTypeLoadError = RegisterCommands();
 
-            ShowHeader();
+            if (!IsTypeLoadError)
+                ShowHeader();
         }
 
         public void ShowHeader()
@@ -88,7 +92,7 @@ namespace Mjolnir.ConsoleCommandLine
             }
         }
         #endregion
-        
+
         #region Private Methods
         private static List<Type> FindAllDerivedTypes<T>(Assembly assembly)
         {
@@ -126,10 +130,11 @@ namespace Mjolnir.ConsoleCommandLine
             //Execute the command
             ExecuteCommand(commandText, tracer, new Nothing());
         }
-        
-        private void RegisterCommands()
+
+        private bool RegisterCommands()
         {
             List<Assembly> allAssemblies = new List<Assembly>();
+            bool isError = false;
 
             LoadAssemblies(allAssemblies);
 
@@ -146,21 +151,41 @@ namespace Mjolnir.ConsoleCommandLine
                         Commands.Add(new Tuple<string, ConsoleCommandAttribute, Type>(attributeValue.Command, attributeValue, type));
                     }
                 }
-                catch (Exception) {/*Surpress exception*/}
+                catch (ReflectionTypeLoadException ex)
+                {
+                    Console.WriteLine($"Assembly Load Error for {assembly.FullName} : {ex.Message}");
+                    isError = true;
+                }
             }
-
+            return isError;
         }
 
         private static void LoadAssemblies(List<Assembly> allAssemblies)
         {
-            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var commandsPathConfig = ConfigurationManager.AppSettings[Constants.CommandsFolderConfigKey];
+            var excludedAssembliesConfig = ConfigurationManager.AppSettings[Constants.CommandAssembliesKey];
+
+            var commandAssembliesList = excludedAssembliesConfig.Split(';');
+
+            string commandsFolderPath = string.Empty;
 
 
-            foreach (string dll in Directory.GetFiles(path, "*.dll"))
-                allAssemblies.Add(Assembly.LoadFile(dll));
+            if (Path.IsPathRooted(commandsPathConfig))
+                commandsFolderPath = commandsPathConfig;
+            else
+                commandsFolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), commandsPathConfig);
 
-            foreach (string dll in Directory.GetFiles(path, "*.exe"))
-                allAssemblies.Add(Assembly.LoadFile(dll));
+
+
+            foreach (string dll in Directory.GetFiles(commandsFolderPath, "*.dll"))
+                if (commandAssembliesList.Contains(Path.GetFileName(dll)))
+                    allAssemblies.Add(Assembly.LoadFile(dll));
+
+            foreach (string exe in Directory.GetFiles(commandsFolderPath, "*.exe"))
+                if (commandAssembliesList.Contains(Path.GetFileName(exe)))
+                    allAssemblies.Add(Assembly.LoadFile(exe));
+
+            allAssemblies.Add(Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Mjolnir.ConsoleCommandLine.dll")));
         }
 
         private object ExecuteCommand(string commandText, ITracingService tracer, object input)
@@ -241,7 +266,7 @@ namespace Mjolnir.ConsoleCommandLine
             }
 
             return Parameters;
-        } 
+        }
         #endregion
 
     }
