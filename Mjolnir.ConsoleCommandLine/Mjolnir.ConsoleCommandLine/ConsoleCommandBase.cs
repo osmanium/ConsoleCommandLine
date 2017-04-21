@@ -9,7 +9,7 @@ namespace Mjolnir.ConsoleCommandLine
 {
     public abstract class ConsoleCommandBase
     {
-        public abstract object Execute(ITracingService tracer, object input);
+        public abstract object ExecuteCommand(ITracingService tracer, object input);
 
         public virtual string GetHelp()
         {

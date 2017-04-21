@@ -12,7 +12,7 @@ namespace Mjolnir.ConsoleCommandLine.Commands
         Desription = "")]
     public class ClearCommand : ConsoleCommandBase
     {
-        public override object Execute(ITracingService tracer, object input)
+        public override object ExecuteCommand(ITracingService tracer, object input)
         {
             Console.Clear();
             return true;
