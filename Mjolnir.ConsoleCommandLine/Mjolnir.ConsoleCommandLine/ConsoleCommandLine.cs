@@ -12,6 +12,11 @@ namespace Mjolnir.ConsoleCommandLine
 {
     public class ConsoleCommandLine
     {
+        private Dictionary<string, string> Parameters = null;
+        
+
+        public List<Tuple<string, ConsoleCommandAttribute, Type>> Commands { get; private set; }
+        
         private static ConsoleCommandLine instance;
         public static ConsoleCommandLine Instance
         {
@@ -24,17 +29,24 @@ namespace Mjolnir.ConsoleCommandLine
                 return instance;
             }
         }
-
-        private List<Tuple<string, ConsoleCommandAttribute, Type>> Commands { get; set; }
-
-        private Dictionary<string, string> Parameters = null;
-
-
+        
         public Action HeaderAction { get; set; }
 
+
+        #region CTOR
         private ConsoleCommandLine()
         {
             Commands = new List<Tuple<string, ConsoleCommandAttribute, Type>>();
+        }
+        #endregion
+        
+        #region Publis Methods
+        public void Initialize()
+        {
+            //Iterate commands in current folder, in different assemblies
+            RegisterCommands();
+
+            ShowHeader();
         }
 
         public void ShowHeader()
@@ -51,14 +63,70 @@ namespace Mjolnir.ConsoleCommandLine
             }
         }
 
-        public void Initialize()
+        public void ProcessLine(string line)
         {
-            //Iterate commands in current folder, in different assemblies
-            RegisterCommands();
-
-            ShowHeader();
+            ProcessArgs(line.Split(' '));
         }
 
+        public void Run(string[] args)
+        {
+            if (args == null || !args.Any())
+            {
+                do
+                {
+                    Console.Write(DateTime.Now.ToShortTimeString() + " > ");
+                    var line = Console.ReadLine().Trim();
+                    if (line.ToLowerInvariant() != "exit")
+                        Instance.ProcessLine(line.Trim());
+                    else
+                        break;
+                } while (true);
+            }
+            else
+            {
+                Instance.ProcessArgs(args);
+            }
+        }
+        #endregion
+        
+        #region Private Methods
+        private static List<Type> FindAllDerivedTypes<T>(Assembly assembly)
+        {
+            var derivedType = typeof(T);
+            return assembly
+                .GetTypes()
+                .Where(t =>
+                    t != derivedType &&
+                    derivedType.IsAssignableFrom(t)
+                    ).ToList();
+        }
+
+        private void ProcessArgs(string[] args)
+        {
+            var tracer = new ConsoleTracer();
+
+            Parse(args);
+
+            string commandText = string.Empty;
+
+            //Find the mathcing command through attributes
+            var commandKey = Commands.Where(w => w.Item1.ToLowerInvariant() == args.FirstOrDefault().ToLowerInvariant())
+                                     .FirstOrDefault();
+
+            if (commandKey != null && !string.IsNullOrWhiteSpace(commandKey.Item1))
+                commandText = commandKey.Item1;
+            else
+            {
+                tracer.Trace("Command not found. To list the commands use 'ListCommands'.");
+                return;
+            }
+
+
+
+            //Execute the command
+            ExecuteCommand(commandText, tracer, new Nothing());
+        }
+        
         private void RegisterCommands()
         {
             List<Assembly> allAssemblies = new List<Assembly>();
@@ -83,17 +151,6 @@ namespace Mjolnir.ConsoleCommandLine
 
         }
 
-        public static List<Type> FindAllDerivedTypes<T>(Assembly assembly)
-        {
-            var derivedType = typeof(T);
-            return assembly
-                .GetTypes()
-                .Where(t =>
-                    t != derivedType &&
-                    derivedType.IsAssignableFrom(t)
-                    ).ToList();
-        }
-
         private static void LoadAssemblies(List<Assembly> allAssemblies)
         {
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -104,34 +161,6 @@ namespace Mjolnir.ConsoleCommandLine
 
             foreach (string dll in Directory.GetFiles(path, "*.exe"))
                 allAssemblies.Add(Assembly.LoadFile(dll));
-        }
-
-
-
-        public void ProcessArgs(string[] args)
-        {
-            var tracer = new ConsoleTracer();
-
-            Parse(args);
-
-            string commandText = string.Empty;
-
-            //Find the mathcing command through attributes
-            var commandKey = Commands.Where(w => w.Item1.ToLowerInvariant() == args.FirstOrDefault().ToLowerInvariant())
-                                     .FirstOrDefault();
-
-            if (commandKey != null && !string.IsNullOrWhiteSpace(commandKey.Item1))
-                commandText = commandKey.Item1;
-            else
-            {
-                tracer.Trace("Command not found.");
-                return;
-            }
-
-
-
-            //Execute the command
-            ExecuteCommand(commandText, tracer, new Nothing());
         }
 
         private object ExecuteCommand(string commandText, ITracingService tracer, object input)
@@ -172,12 +201,7 @@ namespace Mjolnir.ConsoleCommandLine
             }
 
             //TODO : Make tracer based on app.config
-            return commandDependentTypeInstance.Execute(tracer, input);
-        }
-
-        public void ProcessLine(string line)
-        {
-            ProcessArgs(line.Split(' '));
+            return commandDependentTypeInstance.ExecuteCommand(tracer, input);
         }
 
         private Dictionary<string, string> Parse(string[] args)
@@ -217,26 +241,8 @@ namespace Mjolnir.ConsoleCommandLine
             }
 
             return Parameters;
-        }
+        } 
+        #endregion
 
-        public void Run(string[] args)
-        {
-            if (args == null || !args.Any())
-            {
-                do
-                {
-                    Console.Write(DateTime.Now.ToShortTimeString() + " > ");
-                    var line = Console.ReadLine().Trim();
-                    if (line.ToLowerInvariant() != "exit")
-                        Instance.ProcessLine(line.Trim());
-                    else
-                        break;
-                } while (true);
-            }
-            else
-            {
-                Instance.ProcessArgs(args);
-            }
-        }
     }
 }
