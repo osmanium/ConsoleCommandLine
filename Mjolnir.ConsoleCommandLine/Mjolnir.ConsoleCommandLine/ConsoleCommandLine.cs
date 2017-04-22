@@ -55,8 +55,6 @@ namespace Mjolnir.ConsoleCommandLine
 
         public void ShowHeader()
         {
-            Console.Clear();
-
             if (HeaderAction != null)
             {
                 try
@@ -100,7 +98,6 @@ namespace Mjolnir.ConsoleCommandLine
             return assembly
                 .GetTypes()
                 .Where(t =>
-                    t != derivedType &&
                     derivedType.IsAssignableFrom(t)
                     ).ToList();
         }
@@ -179,13 +176,21 @@ namespace Mjolnir.ConsoleCommandLine
 
             foreach (string dll in Directory.GetFiles(commandsFolderPath, "*.dll"))
                 if (commandAssembliesList.Contains(Path.GetFileName(dll)))
+                {
                     allAssemblies.Add(Assembly.LoadFile(dll));
+                    Console.WriteLine($"{Path.GetFileName(dll)} is loaded..");
+                }
 
             foreach (string exe in Directory.GetFiles(commandsFolderPath, "*.exe"))
                 if (commandAssembliesList.Contains(Path.GetFileName(exe)))
+                {
                     allAssemblies.Add(Assembly.LoadFile(exe));
+                    Console.WriteLine($"{Path.GetFileName(exe)} is loaded..");
+                }
 
-            allAssemblies.Add(Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Mjolnir.ConsoleCommandLine.dll")));
+            var mjolnirCommandLineDllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Mjolnir.ConsoleCommandLine.dll");
+            allAssemblies.Add(Assembly.LoadFile(mjolnirCommandLineDllPath));
+            Console.WriteLine($"{Path.GetFileName(mjolnirCommandLineDllPath)} is loaded..");
         }
 
         private object ExecuteCommand(string commandText, ITracingService tracer, object input)
