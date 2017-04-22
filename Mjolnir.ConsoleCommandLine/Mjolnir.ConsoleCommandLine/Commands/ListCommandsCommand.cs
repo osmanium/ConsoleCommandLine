@@ -17,11 +17,11 @@ namespace Mjolnir.ConsoleCommandLine.Commands
         {
             var commands = ConsoleCommandLine.Instance.Commands;
 
-            var table = new TableToConsole("Command", "Type", "Dependency", "Description");
+            var table = new TableToConsole("Command", "Type");
 
             foreach (var command in commands)
             {
-                table.AddRow(command.Item1, command.Item3.FullName, command.Item2?.DependentCommand?.FullName,command?.Item2.Desription);
+                table.AddRow(command.Item1, command.Item3.FullName);
             }
 
             table.Write(Format.MarkDown);
