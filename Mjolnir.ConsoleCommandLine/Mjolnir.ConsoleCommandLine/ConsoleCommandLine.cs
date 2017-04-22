@@ -133,7 +133,7 @@ namespace Mjolnir.ConsoleCommandLine
             List<Assembly> allAssemblies = new List<Assembly>();
             bool isError = false;
 
-            LoadAssemblies(allAssemblies);
+            isError = LoadAssemblies(allAssemblies);
 
             foreach (var assembly in allAssemblies)
             {
@@ -157,12 +157,24 @@ namespace Mjolnir.ConsoleCommandLine
             return isError;
         }
 
-        private static void LoadAssemblies(List<Assembly> allAssemblies)
+        private static bool LoadAssemblies(List<Assembly> allAssemblies)
         {
             var commandsPathConfig = ConfigurationManager.AppSettings[Constants.CommandsFolderConfigKey];
-            var excludedAssembliesConfig = ConfigurationManager.AppSettings[Constants.CommandAssembliesKey];
+            if (commandsPathConfig == null)
+            {
+                Console.WriteLine($"{Constants.CommandsFolderConfigKey} is missing in config.");
+                return true;
+            }
 
-            var commandAssembliesList = excludedAssembliesConfig.Split(';');
+            var includedAssembliesConfig = ConfigurationManager.AppSettings[Constants.CommandAssembliesKey];
+            if (includedAssembliesConfig == null)
+            {
+                Console.WriteLine($"{Constants.CommandAssembliesKey} is missing in config.");
+                return true;
+            }
+
+
+            var commandAssembliesList = includedAssembliesConfig.Split(';');
 
             string commandsFolderPath = string.Empty;
 
@@ -191,6 +203,8 @@ namespace Mjolnir.ConsoleCommandLine
             var mjolnirCommandLineDllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Mjolnir.ConsoleCommandLine.dll");
             allAssemblies.Add(Assembly.LoadFile(mjolnirCommandLineDllPath));
             Console.WriteLine($"{Path.GetFileName(mjolnirCommandLineDllPath)} is loaded..");
+
+            return false;
         }
 
         private object ExecuteCommand(string commandText, ITracingService tracer, object input)
