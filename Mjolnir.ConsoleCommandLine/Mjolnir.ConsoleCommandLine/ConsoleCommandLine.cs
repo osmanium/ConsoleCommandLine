@@ -77,7 +77,10 @@ namespace Mjolnir.ConsoleCommandLine
                 do
                 {
                     Console.Write(DateTime.Now.ToShortTimeString() + " > ");
-                    var line = Console.ReadLine().Trim();
+                    //var line = Console.ReadLine().Trim();
+
+                    var line = CommandAutoComplete.ReadHintedLine(Commands, command => command.Item1);
+
                     if (line.ToLowerInvariant() != "exit")
                         Instance.ProcessLine(line.Trim());
                     else
