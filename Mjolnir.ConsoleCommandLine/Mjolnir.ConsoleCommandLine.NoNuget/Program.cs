@@ -25,10 +25,8 @@ namespace Mjolnir.ConsoleCommandLine.NoNuget
 
             commandLine.Initialize();
 
-            if (!commandLine.IsTypeLoadError)
-                commandLine.Run(args);
-            else Console.ReadKey();
 
+            commandLine.Run(args);
         }
     }
 }

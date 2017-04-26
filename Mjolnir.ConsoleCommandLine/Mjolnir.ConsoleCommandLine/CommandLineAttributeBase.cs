@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mjolnir.ConsoleCommandLine
 {
-    public class CommandLineAttributeBase : Attribute
+    public abstract class CommandLineAttributeBase : Attribute
     {
         public bool IsRequired { get; set; }
         public string Description { get; set; }
