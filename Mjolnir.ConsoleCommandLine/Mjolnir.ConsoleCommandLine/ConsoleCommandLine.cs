@@ -1,5 +1,7 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using CommandLine;
+using Microsoft.Xrm.Sdk;
 using Mjolnir.ConsoleCommandLine.Tracer;
+using Mjolnir.ConsoleCommandLine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,12 +15,12 @@ namespace Mjolnir.ConsoleCommandLine
 {
     public class ConsoleCommandLine
     {
-        private Dictionary<string, string> Parameters = null;
-
+        private Parser _parser = null;
 
         public bool IsTypeLoadError { get; private set; } = false;
 
-        public List<Tuple<string, ConsoleCommandAttribute, Type>> Commands { get; private set; }
+        //(Command Name - ConsoleCommand - Verb)
+        public List<Tuple<string, Type, VerbAttribute>> Commands { get; private set; }
 
         private static ConsoleCommandLine instance;
         public static ConsoleCommandLine Instance
@@ -35,21 +37,29 @@ namespace Mjolnir.ConsoleCommandLine
 
         public Action HeaderAction { get; set; }
 
-
         #region CTOR
         private ConsoleCommandLine()
         {
-            Commands = new List<Tuple<string, ConsoleCommandAttribute, Type>>();
+            //(Command Name - Command Type - ConsoleCommand - Verb)
+            Commands = new List<Tuple<string, Type, VerbAttribute>>();
+
+            _parser = new Parser((s) =>
+            {
+                s.IgnoreUnknownArguments = true;
+                s.EnableDashDash = true;
+                s.CaseSensitive = false;
+                s.HelpWriter = Console.Out;
+            });
         }
         #endregion
 
-        #region Publis Methods
-        public void Initialize()
+        #region Public Methods
+        public void Initialize(bool isHeaderShow)
         {
             //Iterate commands in current folder, in different assemblies
             IsTypeLoadError = RegisterCommands();
 
-            if (!IsTypeLoadError)
+            if (!IsTypeLoadError && isHeaderShow)
                 ShowHeader();
         }
 
@@ -67,7 +77,9 @@ namespace Mjolnir.ConsoleCommandLine
 
         public void ProcessLine(string line)
         {
-            ProcessArgs(line.Split(' '));
+            var newArgs = StringToArgs.CommandLineToArgs(line);
+
+            ProcessArgs(newArgs);
         }
 
         public void Run(string[] args)
@@ -78,8 +90,6 @@ namespace Mjolnir.ConsoleCommandLine
                 {
                     Console.Write(DateTime.Now.ToShortTimeString() + " > ");
                     var line = Console.ReadLine().Trim();
-
-                    //var line = CommandAutoComplete.ReadHintedLine(Commands, command => command.Item1);
 
                     if (line.ToLowerInvariant() != "exit")
                         Instance.ProcessLine(line.Trim());
@@ -109,10 +119,8 @@ namespace Mjolnir.ConsoleCommandLine
         {
             var tracer = new ConsoleTracer();
 
-            Parse(args);
-
             string commandText = string.Empty;
-
+            
             //Find the mathcing command through attributes
             var commandKey = Commands.Where(w => w.Item1.ToLowerInvariant() == args.FirstOrDefault().ToLowerInvariant())
                                      .FirstOrDefault();
@@ -126,9 +134,33 @@ namespace Mjolnir.ConsoleCommandLine
             }
 
 
+            var parseResult = _parser.ParseArguments(args, Commands.Select(s => s.Item2).ToArray());
 
-            //Execute the command
-            ExecuteCommand(commandText, tracer, new Nothing());
+            if (parseResult is Parsed<object>)
+            {
+                //Parsed
+                var parsedResult = parseResult as Parsed<object>;
+                
+                var parsedCommand = parsedResult.Value as ConsoleCommandBase;
+
+                //Execute the command
+                parsedCommand.ExecuteCommand(tracer, new Nothing());
+            }
+            else
+            {
+                //Error Parsed
+
+                var errorParseResult = parseResult as NotParsed<object>;
+
+                tracer.Trace($"Error in parsing command line,");
+
+                foreach (var error in errorParseResult.Errors)
+                {
+                    tracer.Trace($"{error}");
+                }
+
+                return;
+            }
         }
 
         private bool RegisterCommands()
@@ -143,12 +175,14 @@ namespace Mjolnir.ConsoleCommandLine
                 try
                 {
                     var types = FindAllDerivedTypes<ConsoleCommandBase>(assembly)
-                                        .Where(w => w.GetCustomAttribute<ConsoleCommandAttribute>() != null);
+                                        .Where(w => w.GetCustomAttribute<VerbAttribute>() != null);
 
                     foreach (var type in types)
                     {
-                        var attributeValue = type.GetCustomAttribute<ConsoleCommandAttribute>();
-                        Commands.Add(new Tuple<string, ConsoleCommandAttribute, Type>(attributeValue.Command, attributeValue, type));
+                        var verbAttrValue = type.GetCustomAttribute<VerbAttribute>();
+
+                        //(Command Name - Command Type - ConsoleCommand - Verb)
+                        Commands.Add(new Tuple<string, Type, VerbAttribute>(verbAttrValue.Name, type, verbAttrValue));
                     }
                 }
                 catch (ReflectionTypeLoadException ex)
@@ -207,87 +241,10 @@ namespace Mjolnir.ConsoleCommandLine
             allAssemblies.Add(Assembly.LoadFile(mjolnirCommandLineDllPath));
             Console.WriteLine($"{Path.GetFileName(mjolnirCommandLineDllPath)} is loaded..");
 
+            allAssemblies.Add(Assembly.LoadFile(Assembly.GetEntryAssembly().Location));
+            Console.WriteLine($"{Path.GetFileName(Assembly.GetEntryAssembly().Location)} is loaded..");
+
             return false;
-        }
-
-        private object ExecuteCommand(string commandText, ITracingService tracer, object input)
-        {
-            var command = Commands.FirstOrDefault(w => w.Item1.ToLowerInvariant() == commandText.ToLowerInvariant());
-
-
-            if (command.Item2.DependentCommand != null)
-            {
-                var dependentConsoleCommandAttribute = command.Item2.DependentCommand.GetCustomAttribute<ConsoleCommandAttribute>();
-
-                //TODO : Validate inputs
-
-                input = ExecuteCommand(dependentConsoleCommandAttribute.Command, tracer, input);
-            }
-
-            dynamic commandDependentTypeInstance = Activator.CreateInstance(command.Item3);
-
-            //TODO : Fill the similar properties with parameters
-            var properties = command.Item3.GetProperties().Where(w => w.GetCustomAttribute<CommandLineAttributeBase>() != null);
-
-            foreach (var property in properties)
-            {
-                var parameter = Parameters[property.Name];
-
-                if (!string.IsNullOrWhiteSpace(parameter))
-                {
-                    try
-                    {
-                        //TODO : Based on property type, cast the value, ; StringInputAttribute - IntInputAttribute
-                        property.SetValue(commandDependentTypeInstance, parameter);
-                    }
-                    catch (Exception ex)
-                    {
-                        //
-                    }
-                }
-            }
-
-            //TODO : Make tracer based on app.config
-            return commandDependentTypeInstance.ExecuteCommand(tracer, input);
-        }
-
-        private Dictionary<string, string> Parse(string[] args)
-        {
-            Parameters = new Dictionary<string, string>();
-
-            int i = 0;
-
-            while (i < args.Length)
-            {
-                if (args[i].Length > 1 && args[i][0] == '-')
-                {
-                    // The current string is a parameter name
-                    string key = args[i].Substring(1, args[i].Length - 1);
-                    string value = "";
-                    i++;
-                    if (i < args.Length)
-                    {
-                        if (args[i].Length > 0 && args[i][0] == '-')
-                        {
-                            // The next string is a new parameter, do not nothing
-                        }
-                        else
-                        {
-                            // The next string is a value, read the value and move forward
-                            value = args[i];
-                            i++;
-                        }
-                    }
-
-                    Parameters[key] = value;
-                }
-                else
-                {
-                    i++;
-                }
-            }
-
-            return Parameters;
         }
         #endregion
 

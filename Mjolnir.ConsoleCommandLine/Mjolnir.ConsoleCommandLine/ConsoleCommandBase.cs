@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using CommandLine;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace Mjolnir.ConsoleCommandLine
 {
     public abstract class ConsoleCommandBase
     {
+        [Option('v', "verbose", Default = false)]
+        public bool Verbose { get; set; }
+
         public abstract object ExecuteCommand(ITracingService tracer, object input);
 
         public virtual string GetHelp()

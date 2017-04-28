@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using CommandLine;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace Mjolnir.ConsoleCommandLine.Commands
 {
-    [ConsoleCommandAttribute(
-        Command = "Clear",
-        Desription = "")]
+    [Verb("Clear")]
     public class ClearCommand : ConsoleCommandBase
     {
         public override object ExecuteCommand(ITracingService tracer, object input)

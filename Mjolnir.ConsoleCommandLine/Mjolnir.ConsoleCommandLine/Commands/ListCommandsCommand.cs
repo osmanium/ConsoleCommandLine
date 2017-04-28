@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using CommandLine;
+using Microsoft.Xrm.Sdk;
 using Mjolnir.ConsoleCommandLine.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace Mjolnir.ConsoleCommandLine.Commands
 {
-    [ConsoleCommandAttribute(
-        Command = "ListCommands",
-        Desription = "")]
+    [Verb("ListCommands")]
     public class ListCommandsCommand : ConsoleCommandBase
     {
         public override object ExecuteCommand(ITracingService tracer, object input)
@@ -21,7 +20,7 @@ namespace Mjolnir.ConsoleCommandLine.Commands
 
             foreach (var command in commands)
             {
-                table.AddRow(command.Item1, command.Item3.FullName);
+                table.AddRow(command.Item1, command.Item2.FullName);
             }
 
             table.Write(Format.MarkDown);

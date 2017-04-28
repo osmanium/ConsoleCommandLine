@@ -11,7 +11,7 @@ namespace Mjolnir.ConsoleCommandLine.UnitTests
         {
             var cmd = ConsoleCommandLine.Instance;
 
-            cmd.Initialize();
+            cmd.Initialize(false);
         }
     }
 }

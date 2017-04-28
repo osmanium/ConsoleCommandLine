@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommandLine;
 
 namespace Mjolnir.ConsoleCommandLine.NoNuget
 {
@@ -23,7 +24,7 @@ namespace Mjolnir.ConsoleCommandLine.NoNuget
             };
 
 
-            commandLine.Initialize();
+            commandLine.Initialize(args != null && !args.Any());
 
 
             commandLine.Run(args);
