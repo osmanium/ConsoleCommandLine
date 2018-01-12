@@ -1,5 +1,4 @@
 ﻿using CommandLine;
-using Microsoft.Xrm.Sdk;
 using Mjolnir.ConsoleCommandLine.Tracer;
 using Mjolnir.ConsoleCommandLine.Utils;
 using System;
@@ -129,7 +128,7 @@ namespace Mjolnir.ConsoleCommandLine
                 commandText = commandKey.Item1;
             else
             {
-                tracer.Trace("Command not found. To list the commands use 'ListCommands'.");
+                tracer.Trace("Command not found. To list the commands use 'List-Commands'.");
                 return;
             }
 

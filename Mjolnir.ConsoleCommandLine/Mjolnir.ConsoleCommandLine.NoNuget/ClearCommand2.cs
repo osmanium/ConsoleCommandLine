@@ -1,5 +1,5 @@
 ﻿using CommandLine;
-using Microsoft.Xrm.Sdk;
+using Mjolnir.ConsoleCommandLine.Tracer;
 using System;
 using System.Collections.Generic;
 using System.Linq;

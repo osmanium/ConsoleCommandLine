@@ -1,5 +1,5 @@
 ﻿using CommandLine;
-using Microsoft.Xrm.Sdk;
+using Mjolnir.ConsoleCommandLine.Tracer;
 using Mjolnir.ConsoleCommandLine.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Mjolnir.ConsoleCommandLine.Commands
 {
-    [Verb("ListCommands")]
+    [Verb("List-Commands")]
     public class ListCommandsCommand : ConsoleCommandBase
     {
         public override object ExecuteCommand(ITracingService tracer, object input)
