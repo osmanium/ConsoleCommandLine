@@ -12,20 +12,23 @@ namespace Mjolnir.ConsoleCommandLine.Commands
     [Verb("List-Commands")]
     public class ListCommandsCommand : ConsoleCommandBase
     {
-        public override object ExecuteCommand(ITracingService tracer, object input)
+        public override async Task<object> ExecuteCommand(ITracingService tracer, object input)
         {
-            var commands = ConsoleCommandLine.Instance.Commands;
-
-            var table = new TableToConsole("Command", "Type");
-
-            foreach (var command in commands)
+            return Task.Run(() =>
             {
-                table.AddRow(command.Item1, command.Item2.FullName);
-            }
+                var commands = ConsoleCommandLine.Instance.Commands;
 
-            table.Write(Format.MarkDown);
+                var table = new TableToConsole("Command", "Type");
 
-            return true;
+                foreach (var command in commands)
+                {
+                    table.AddRow(command.Item1, command.Item2.FullName);
+                }
+
+                table.Write(Format.MarkDown);
+
+                return true;
+            });            
         }
     }
 }

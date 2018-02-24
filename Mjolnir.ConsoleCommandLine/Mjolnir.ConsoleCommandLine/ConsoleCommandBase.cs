@@ -13,7 +13,7 @@ namespace Mjolnir.ConsoleCommandLine
         [Option('v', "verbose", Default = false)]
         public bool Verbose { get; set; }
 
-        public abstract object ExecuteCommand(ITracingService tracer, object input);
+        public abstract Task<object> ExecuteCommand(ITracingService tracer, object input);
 
         public virtual string GetHelp()
         {

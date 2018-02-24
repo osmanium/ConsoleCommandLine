@@ -11,10 +11,13 @@ namespace Mjolnir.ConsoleCommandLine.Commands
     [Verb("Clear")]
     public class ClearCommand : ConsoleCommandBase
     {
-        public override object ExecuteCommand(ITracingService tracer, object input)
+        public override async Task<object> ExecuteCommand(ITracingService tracer, object input)
         {
-            Console.Clear();
-            return true;
+            return await Task.Run(() =>
+            {
+                Console.Clear();
+                return true;
+            });
         }
     }
 }
